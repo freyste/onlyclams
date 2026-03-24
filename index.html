@@ -3,387 +3,251 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <meta name="description" content="OnlyClams — The only clamming forecast you'll ever need. Get weekly alerts for perfect clamming conditions in Northern California."/>
+  <meta name="description" content="OnlyClams — The only clamming forecast you'll ever need."/>
   <title>OnlyClams 🦪</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Press+Start+2P&display=swap');
-
     :root {
-      --navy:    #0d0d2b;
-      --deep:    #050510;
-      --purple:  #4b0082;
-      --cyan:    #00e5ff;
-      --gold:    #ffd700;
-      --orange:  #ff6a00;
-      --red:     #ff2244;
-      --pink:    #ff80ab;
-      --lavender:#c3a6ff;
-      --teal:    #1a6b8a;
+      --navy:#0d0d2b; --deep:#050510; --purple:#4b0082; --cyan:#00e5ff;
+      --gold:#ffd700; --orange:#ff6a00; --red:#ff2244; --pink:#ff80ab;
+      --lavender:#c3a6ff; --teal:#1a6b8a;
     }
-
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-
-    body {
-      background: var(--deep);
-      color: #ffe0b2;
-      font-family: 'Share Tech Mono', monospace;
-      min-height: 100vh;
-      overflow-x: hidden;
-    }
-
-    /* ── SCANLINE OVERLAY ── */
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background: repeating-linear-gradient(
-        0deg,
-        transparent,
-        transparent 2px,
-        rgba(0,0,0,0.08) 2px,
-        rgba(0,0,0,0.08) 4px
-      );
-      pointer-events: none;
-      z-index: 999;
-    }
-
-    /* ── STARS ── */
-    .stars {
-      position: fixed;
-      inset: 0;
-      background:
-        radial-gradient(1px 1px at 10% 15%, #fff 0%, transparent 100%),
-        radial-gradient(1px 1px at 25% 40%, #fff 0%, transparent 100%),
-        radial-gradient(1px 1px at 40% 10%, #fff 0%, transparent 100%),
-        radial-gradient(1px 1px at 55% 60%, #fff 0%, transparent 100%),
-        radial-gradient(1px 1px at 70% 25%, #fff 0%, transparent 100%),
-        radial-gradient(1px 1px at 85% 50%, #fff 0%, transparent 100%),
-        radial-gradient(1px 1px at 92% 8%,  #fff 0%, transparent 100%),
-        radial-gradient(1px 1px at 5%  80%, #fff 0%, transparent 100%),
-        radial-gradient(1px 1px at 60% 85%, #fff 0%, transparent 100%),
-        radial-gradient(1px 1px at 78% 70%, #fff 0%, transparent 100%);
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    /* ── LAYOUT ── */
-    .wrapper {
-      position: relative;
-      z-index: 1;
-      max-width: 860px;
-      margin: 0 auto;
-      padding: 40px 20px 80px;
-    }
-
-    /* ── HERO ── */
-    .hero {
-      text-align: center;
-      padding: 48px 24px 40px;
-      background: linear-gradient(180deg, #0d0d2b 0%, #1a0030 55%, #4b0082 100%);
-      border: 2px solid var(--purple);
-      border-radius: 16px;
-      margin-bottom: 32px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .hero::after {
-      content: '';
-      position: absolute;
-      bottom: 0; left: 0; right: 0;
-      height: 3px;
-      background: linear-gradient(90deg, var(--red), var(--orange), var(--gold), var(--orange), var(--red));
-    }
-
-    .hero img {
-      width: 280px;
-      max-width: 80%;
-      display: block;
-      margin: 0 auto 20px;
-      image-rendering: pixelated;
-    }
-
-    .hero h1 {
-      font-family: 'Press Start 2P', monospace;
-      font-size: clamp(22px, 5vw, 42px);
-      color: var(--gold);
-      letter-spacing: 4px;
-      text-shadow: 0 0 12px var(--orange), 0 0 28px var(--red);
-      margin-bottom: 12px;
-      line-height: 1.3;
-    }
-
-    .hero h1 span { color: var(--cyan); }
-
-    .tagline {
-      font-family: 'Share Tech Mono', monospace;
-      color: var(--lavender);
-      font-size: clamp(13px, 2.5vw, 16px);
-      letter-spacing: 2px;
-      margin-bottom: 8px;
-    }
-
-    .subtitle {
-      color: var(--teal);
-      font-size: 12px;
-      letter-spacing: 1px;
-      margin-bottom: 32px;
-    }
-
-    /* ── CTA BUTTON ── */
-    .cta-wrap { margin: 8px 0 0; }
-
-    .cta-btn {
-      display: inline-block;
-      background: linear-gradient(90deg, var(--orange), var(--gold));
-      color: #0d0d2b;
-      padding: 16px 40px;
-      border-radius: 4px;
-      text-decoration: none;
-      font-family: 'Press Start 2P', monospace;
-      font-size: clamp(10px, 2vw, 13px);
-      letter-spacing: 1px;
-      box-shadow: 0 0 20px rgba(255,106,0,0.5), 0 0 40px rgba(255,34,68,0.3);
-      transition: transform 0.1s, box-shadow 0.1s;
-    }
-
-    .cta-btn:hover {
-      transform: scale(1.04);
-      box-shadow: 0 0 30px rgba(255,106,0,0.8), 0 0 60px rgba(255,34,68,0.5);
-    }
-
-    /* ── BANNER ── */
-    .banner {
-      background: linear-gradient(90deg, var(--red), var(--orange), var(--gold), var(--orange), var(--red));
-      padding: 12px;
-      text-align: center;
-      border-radius: 8px;
-      margin-bottom: 32px;
-      font-family: 'Press Start 2P', monospace;
-      font-size: clamp(8px, 1.8vw, 11px);
-      color: #0d0d2b;
-      letter-spacing: 1px;
-    }
-
-    /* ── SECTION CARDS ── */
-    .card {
-      background: var(--navy);
-      border: 2px solid var(--purple);
-      border-radius: 12px;
-      margin-bottom: 28px;
-      overflow: hidden;
-    }
-
-    .card-header {
-      background: linear-gradient(90deg, var(--purple), #1a0030);
-      padding: 12px 20px;
-      font-family: 'Press Start 2P', monospace;
-      font-size: clamp(9px, 1.8vw, 11px);
-      color: var(--gold);
-      letter-spacing: 2px;
-    }
-
-    .card-body {
-      padding: 24px 20px;
-    }
-
-    /* ── WHAT IS IT ── */
-    .what-text {
-      color: #ffe0b2;
-      font-size: 14px;
-      line-height: 1.9;
-      letter-spacing: 0.5px;
-    }
-
-    .what-text strong { color: var(--cyan); }
-
-    /* ── HOW IT WORKS ── */
-    .conditions {
-      width: 100%;
-      border-collapse: collapse;
-    }
-
-    .conditions tr + tr td {
-      border-top: 1px solid #1a1a3e;
-    }
-
-    .conditions td {
-      padding: 14px 16px;
-      font-size: 13px;
-      line-height: 1.6;
-      vertical-align: top;
-    }
-
-    .conditions td:first-child {
-      color: var(--cyan);
-      white-space: nowrap;
-      width: 1%;
-      padding-right: 20px;
-    }
-
-    .conditions td:last-child {
-      color: #ffe0b2;
-    }
-
-    .conditions td:last-child span {
-      color: var(--lavender);
-      font-size: 11px;
-      display: block;
-      margin-top: 4px;
-    }
-
-    /* ── LOCATIONS ── */
-    .locations {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-    }
-
-    @media (max-width: 500px) {
-      .locations { grid-template-columns: 1fr; }
-    }
-
-    .loc-card {
-      background: #080818;
-      border: 1px solid var(--teal);
-      border-radius: 8px;
-      padding: 16px;
-      text-align: center;
-    }
-
-    .loc-card .loc-icon { font-size: 28px; margin-bottom: 8px; }
-    .loc-card .loc-name { color: var(--gold); font-size: 13px; letter-spacing: 1px; margin-bottom: 4px; }
-    .loc-card .loc-station { color: var(--teal); font-size: 11px; }
-
-    /* ── SIGNUP CARD ── */
-    .signup-card {
-      background: var(--navy);
-      border: 2px solid var(--orange);
-      border-radius: 12px;
-      margin-bottom: 28px;
-      overflow: hidden;
-      text-align: center;
-    }
-
-    .signup-header {
-      background: linear-gradient(90deg, var(--orange), var(--red));
-      padding: 12px 20px;
-      font-family: 'Press Start 2P', monospace;
-      font-size: clamp(9px, 1.8vw, 11px);
-      color: var(--gold);
-      letter-spacing: 2px;
-    }
-
-    .signup-body {
-      padding: 32px 20px;
-    }
-
-    .signup-body p {
-      color: #ffe0b2;
-      font-size: 14px;
-      line-height: 1.8;
-      margin-bottom: 24px;
-      letter-spacing: 0.5px;
-    }
-
-    .signup-body p strong { color: var(--cyan); }
-
-    /* ── FOOTER ── */
-    footer {
-      text-align: center;
-      padding: 20px;
-      color: var(--purple);
-      font-size: 10px;
-      letter-spacing: 2px;
-      border-top: 1px solid #1a1a3e;
-      margin-top: 16px;
-    }
-
-    /* ── PIXEL DIVIDER ── */
-    .pixel-divider {
-      height: 4px;
-      background: repeating-linear-gradient(
-        90deg,
-        var(--red) 0px, var(--red) 8px,
-        var(--orange) 8px, var(--orange) 16px,
-        var(--gold) 16px, var(--gold) 24px,
-        var(--cyan) 24px, var(--cyan) 32px,
-        var(--purple) 32px, var(--purple) 40px
-      );
-      margin: 32px 0;
-      border-radius: 2px;
-    }
-
+    * { box-sizing:border-box; margin:0; padding:0; }
+    body { background:var(--deep); color:#ffe0b2; font-family:'Share Tech Mono',monospace; min-height:100vh; overflow-x:hidden; }
+    body::before { content:''; position:fixed; inset:0; background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.08) 2px,rgba(0,0,0,0.08) 4px); pointer-events:none; z-index:999; }
+    .stars { position:fixed; inset:0; background:
+      radial-gradient(1px 1px at 10% 15%,#fff 0%,transparent 100%),
+      radial-gradient(1px 1px at 25% 40%,#fff 0%,transparent 100%),
+      radial-gradient(1px 1px at 40% 10%,#fff 0%,transparent 100%),
+      radial-gradient(1px 1px at 55% 60%,#fff 0%,transparent 100%),
+      radial-gradient(1px 1px at 70% 25%,#fff 0%,transparent 100%),
+      radial-gradient(1px 1px at 85% 50%,#fff 0%,transparent 100%),
+      radial-gradient(1px 1px at 92% 8%,#fff 0%,transparent 100%),
+      radial-gradient(1px 1px at 5% 80%,#fff 0%,transparent 100%),
+      radial-gradient(1px 1px at 60% 85%,#fff 0%,transparent 100%),
+      radial-gradient(1px 1px at 78% 70%,#fff 0%,transparent 100%);
+      pointer-events:none; z-index:0; }
+    .wrapper { position:relative; z-index:1; max-width:900px; margin:0 auto; padding:40px 20px 80px; }
+    .hero { text-align:center; padding:48px 24px 40px; background:linear-gradient(180deg,#0d0d2b 0%,#1a0030 55%,#4b0082 100%); border:2px solid var(--purple); border-radius:16px; margin-bottom:32px; position:relative; overflow:hidden; }
+    .hero::after { content:''; position:absolute; bottom:0; left:0; right:0; height:3px; background:linear-gradient(90deg,var(--red),var(--orange),var(--gold),var(--orange),var(--red)); }
+    .hero img { width:280px; max-width:80%; display:block; margin:0 auto 20px; image-rendering:pixelated; }
+    .hero h1 { font-family:'Press Start 2P',monospace; font-size:clamp(22px,5vw,42px); color:var(--gold); letter-spacing:4px; text-shadow:0 0 12px var(--orange),0 0 28px var(--red); margin-bottom:12px; line-height:1.3; }
+    .hero h1 span { color:var(--cyan); }
+    .tagline { color:var(--lavender); font-size:clamp(13px,2.5vw,16px); letter-spacing:2px; margin-bottom:8px; }
+    .subtitle { color:var(--teal); font-size:12px; letter-spacing:1px; margin-bottom:8px; }
+    .updated { color:#4b0082; font-size:11px; letter-spacing:1px; margin-bottom:28px; }
+    .cta-btn { display:inline-block; background:linear-gradient(90deg,var(--orange),var(--gold)); color:#0d0d2b; padding:14px 36px; border-radius:4px; text-decoration:none; font-family:'Press Start 2P',monospace; font-size:clamp(9px,1.8vw,12px); letter-spacing:1px; box-shadow:0 0 20px rgba(255,106,0,0.5); transition:transform 0.1s; }
+    .cta-btn:hover { transform:scale(1.04); }
+    .banner { background:linear-gradient(90deg,var(--red),var(--orange),var(--gold),var(--orange),var(--red)); padding:14px; text-align:center; border-radius:8px; margin-bottom:32px; font-family:'Press Start 2P',monospace; font-size:clamp(8px,1.6vw,11px); color:#0d0d2b; letter-spacing:1px; }
+    .card { background:var(--navy); border:2px solid var(--purple); border-radius:12px; margin-bottom:28px; overflow:hidden; }
+    .card-header { background:linear-gradient(90deg,var(--purple),#1a0030); padding:12px 20px; font-family:'Press Start 2P',monospace; font-size:clamp(9px,1.8vw,11px); color:var(--gold); letter-spacing:2px; }
+    .card-body { padding:24px 20px; }
+    .forecast-table { width:100%; border-collapse:collapse; font-family:'Share Tech Mono',monospace; font-size:13px; }
+    .forecast-table th { padding:10px 14px; color:var(--lavender); font-size:11px; letter-spacing:2px; border-bottom:2px solid var(--purple); background:#0a0a1e; }
+    .forecast-table td { padding:12px 14px; border-bottom:1px solid var(--teal); color:var(--gold); vertical-align:middle; }
+    .pixel-divider { height:4px; background:repeating-linear-gradient(90deg,var(--red) 0px,var(--red) 8px,var(--orange) 8px,var(--orange) 16px,var(--gold) 16px,var(--gold) 24px,var(--cyan) 24px,var(--cyan) 32px,var(--purple) 32px,var(--purple) 40px); margin:32px 0; border-radius:2px; }
+    .conditions-table { width:100%; border-collapse:collapse; font-size:13px; }
+    .conditions-table td { padding:12px 16px; border-bottom:1px solid #1a1a3e; vertical-align:top; line-height:1.6; }
+    .conditions-table td:first-child { color:var(--cyan); white-space:nowrap; width:1%; padding-right:20px; }
+    .conditions-table td span { color:var(--lavender); font-size:11px; display:block; margin-top:4px; }
+    .locations-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+    @media(max-width:500px) { .locations-grid { grid-template-columns:1fr; } }
+    .loc-card { background:#080818; border:1px solid var(--teal); border-radius:8px; padding:16px; text-align:center; }
+    .loc-card .loc-icon { font-size:28px; margin-bottom:8px; }
+    .loc-card .loc-name { color:var(--gold); font-size:13px; letter-spacing:1px; margin-bottom:4px; }
+    .loc-card .loc-station { color:var(--teal); font-size:11px; }
+    .signup-card { background:var(--navy); border:2px solid var(--orange); border-radius:12px; margin-bottom:28px; overflow:hidden; text-align:center; }
+    .signup-header { background:linear-gradient(90deg,var(--orange),var(--red)); padding:12px 20px; font-family:'Press Start 2P',monospace; font-size:clamp(9px,1.8vw,11px); color:var(--gold); letter-spacing:2px; }
+    .signup-body { padding:32px 20px; }
+    .signup-body p { color:#ffe0b2; font-size:14px; line-height:1.8; margin-bottom:24px; }
+    footer { text-align:center; padding:20px; color:var(--purple); font-size:10px; letter-spacing:2px; border-top:1px solid #1a1a3e; margin-top:16px; }
   </style>
 </head>
 <body>
-
   <div class="stars"></div>
-
   <div class="wrapper">
 
-    <!-- ░░ HERO ░░ -->
+    <!-- HERO -->
     <div class="hero">
-      <img src="onlyclams_header.gif" alt="OnlyClams animated logo"/>
+      <img src="onlyclams_header.gif" alt="OnlyClams"/>
       <h1>ONLY<span>CLAMS</span></h1>
       <p class="tagline">★ THE ONLY CLAMMING FORECAST YOU'LL EVER NEED ★</p>
-      <p class="subtitle">NORTHERN CALIFORNIA · WEEKLY ALERTS · FREE FOREVER</p>
-      <div class="cta-wrap">
-        <a href="https://forms.gle/43oiAsQ9iUyzUP8U7" class="cta-btn">
-          ➕ JOIN THE MAILING LIST
-        </a>
-      </div>
+      <p class="subtitle">NORTHERN CALIFORNIA · UPDATED DAILY · FREE FOREVER</p>
+      <p class="updated">LAST UPDATED: MONDAY MAR 23, 2026 · 07:19 PM PDT</p>
+      <a href="https://forms.gle/43oiAsQ9iUyzUP8U7" class="cta-btn">➕ JOIN THE MAILING LIST</a>
     </div>
 
-    <!-- ░░ TICKER BANNER ░░ -->
-    <div class="banner">
-      🦪 &nbsp; FREE WEEKLY EMAIL ALERTS &nbsp; · &nbsp; NOAA TIDE DATA &nbsp; · &nbsp; REAL WEATHER FORECASTS &nbsp; · &nbsp; NO ADS &nbsp; · &nbsp; NO BS &nbsp; 🦪
-    </div>
+    <!-- BANNER -->
+    <div class="banner">🦪 &nbsp; ▶▶ 5 GREAT CLAMMING DAYS DETECTED ◀◀ &nbsp; 🦪</div>
 
-    <!-- ░░ WHAT IS ONLYCLAMS ░░ -->
-    <div class="card">
-      <div class="card-header">◈ WHAT IS ONLYCLAMS?</div>
-      <div class="card-body">
-        <p class="what-text">
-          OnlyClams is a <strong>free weekly email alert</strong> for clam diggers on the
-          Northern California coast. Every Wednesday morning it automatically checks
-          <strong>tide predictions</strong>, <strong>weather forecasts</strong>, and
-          <strong>daylight hours</strong> for the upcoming weekend — and emails you
-          only when conditions are actually worth suiting up for.
-          <br/><br/>
-          No app. No subscription fee. No endless scrolling through tide charts.
-          Just a clean forecast straight to your inbox when the clams are calling. 🦪
-        </p>
+    <!-- FORECAST SECTIONS -->
+    
+    <div class="card" style="margin-bottom:32px">
+      <div class="card-header" style="display:flex;justify-content:space-between;align-items:center">
+        <span>📍 TOMALES BAY, CA</span>
+        <span style="color:#ffd700;font-size:11px">5 GREAT DAYS 🎉</span>
       </div>
+      <div style="overflow-x:auto">
+        <table class="forecast-table">
+          <thead>
+            <tr>
+              <th style="text-align:left">DAY</th>
+              <th>TEMP</th>
+              <th>DAYLIGHT</th>
+              <th style="text-align:left">NEG TIDES</th>
+              <th>BEST LOW</th>
+            </tr>
+          </thead>
+          <tbody>
+        <tr style="background:#0d0d2b">
+          <td>MONDAY<br>
+              <span style="color:#c3a6ff;font-size:11px">Mar 23, 2026</span></td>
+          <td style="text-align:center">
+              <b style="color:#ff80ab">65°F</b></td>
+          <td style="text-align:center;font-size:12px">
+              <span style="color:#ffd700">🌅 07:08 AM</span><br>
+              <span style="color:#ff6a00">🌇 07:27 PM</span></td>
+          <td style="font-size:12px"><span style="color:#00e5ff">09:19 AM</span> → <b style="color:#ffd700">-0.53 ft</b></td>
+          <td style="text-align:center;background:#1a0030">
+              🌊<br>
+              <b style="color:#ff2244;font-size:18px">-0.53 ft</b><br>
+              <span style="color:#c3a6ff;font-size:11px">@ 09:19 AM</span>
+          </td>
+        </tr>
+        
+        <tr style="background:#111133">
+          <td>FRIDAY<br>
+              <span style="color:#c3a6ff;font-size:11px">Mar 27, 2026</span></td>
+          <td style="text-align:center">
+              <b style="color:#ff80ab">73°F</b></td>
+          <td style="text-align:center;font-size:12px">
+              <span style="color:#ffd700">🌅 07:02 AM</span><br>
+              <span style="color:#ff6a00">🌇 07:31 PM</span></td>
+          <td style="font-size:12px"><span style="color:#00e5ff">01:56 PM</span> → <b style="color:#ffd700">-0.59 ft</b></td>
+          <td style="text-align:center;background:#1a0030">
+              🌊<br>
+              <b style="color:#ff2244;font-size:18px">-0.59 ft</b><br>
+              <span style="color:#c3a6ff;font-size:11px">@ 01:56 PM</span>
+          </td>
+        </tr>
+        
+        <tr style="background:#0d0d2b">
+          <td>SATURDAY<br>
+              <span style="color:#c3a6ff;font-size:11px">Mar 28, 2026</span></td>
+          <td style="text-align:center">
+              <b style="color:#ff80ab">64°F</b></td>
+          <td style="text-align:center;font-size:12px">
+              <span style="color:#ffd700">🌅 07:00 AM</span><br>
+              <span style="color:#ff6a00">🌇 07:32 PM</span></td>
+          <td style="font-size:12px"><span style="color:#00e5ff">02:47 PM</span> → <b style="color:#ffd700">-0.53 ft</b></td>
+          <td style="text-align:center;background:#1a0030">
+              🌊<br>
+              <b style="color:#ff2244;font-size:18px">-0.53 ft</b><br>
+              <span style="color:#c3a6ff;font-size:11px">@ 02:47 PM</span>
+          </td>
+        </tr>
+        
+        <tr style="background:#111133">
+          <td>SUNDAY<br>
+              <span style="color:#c3a6ff;font-size:11px">Mar 29, 2026</span></td>
+          <td style="text-align:center">
+              <b style="color:#ff80ab">65°F</b></td>
+          <td style="text-align:center;font-size:12px">
+              <span style="color:#ffd700">🌅 06:59 AM</span><br>
+              <span style="color:#ff6a00">🌇 07:33 PM</span></td>
+          <td style="font-size:12px"><span style="color:#00e5ff">03:30 PM</span> → <b style="color:#ffd700">-0.34 ft</b></td>
+          <td style="text-align:center;background:#1a0030">
+              🌊<br>
+              <b style="color:#ff2244;font-size:18px">-0.34 ft</b><br>
+              <span style="color:#c3a6ff;font-size:11px">@ 03:30 PM</span>
+          </td>
+        </tr>
+        
+        <tr style="background:#0d0d2b">
+          <td>MONDAY<br>
+              <span style="color:#c3a6ff;font-size:11px">Mar 30, 2026</span></td>
+          <td style="text-align:center">
+              <b style="color:#ff80ab">60°F</b></td>
+          <td style="text-align:center;font-size:12px">
+              <span style="color:#ffd700">🌅 06:57 AM</span><br>
+              <span style="color:#ff6a00">🌇 07:34 PM</span></td>
+          <td style="font-size:12px"><span style="color:#00e5ff">04:08 PM</span> → <b style="color:#ffd700">-0.04 ft</b></td>
+          <td style="text-align:center;background:#1a0030">
+              🌊<br>
+              <b style="color:#ff2244;font-size:18px">-0.04 ft</b><br>
+              <span style="color:#c3a6ff;font-size:11px">@ 04:08 PM</span>
+          </td>
+        </tr>
+        </tbody>
+        </table>
+      </div>
+      <p style="color:#4b0082;font-size:10px;font-family:monospace;margin:6px 0 0 2px;padding:0 16px 12px">
+        NOAA #9415020 · 38.1641°N, 122.9235°W
+      </p>
     </div>
+    
+    <div class="card" style="margin-bottom:32px">
+      <div class="card-header" style="display:flex;justify-content:space-between;align-items:center">
+        <span>📍 HALF MOON BAY, CA</span>
+        <span style="color:#ffd700;font-size:11px">1 GREAT DAY 🎉</span>
+      </div>
+      <div style="overflow-x:auto">
+        <table class="forecast-table">
+          <thead>
+            <tr>
+              <th style="text-align:left">DAY</th>
+              <th>TEMP</th>
+              <th>DAYLIGHT</th>
+              <th style="text-align:left">NEG TIDES</th>
+              <th>BEST LOW</th>
+            </tr>
+          </thead>
+          <tbody>
+        <tr style="background:#0d0d2b">
+          <td>SATURDAY<br>
+              <span style="color:#c3a6ff;font-size:11px">Mar 28, 2026</span></td>
+          <td style="text-align:center">
+              <b style="color:#ff80ab">72°F</b></td>
+          <td style="text-align:center;font-size:12px">
+              <span style="color:#ffd700">🌅 06:59 AM</span><br>
+              <span style="color:#ff6a00">🌇 07:30 PM</span></td>
+          <td style="font-size:12px"><span style="color:#00e5ff">03:14 PM</span> → <b style="color:#ffd700">-0.36 ft</b></td>
+          <td style="text-align:center;background:#1a0030">
+              🌊<br>
+              <b style="color:#ff2244;font-size:18px">-0.36 ft</b><br>
+              <span style="color:#c3a6ff;font-size:11px">@ 03:14 PM</span>
+          </td>
+        </tr>
+        </tbody>
+        </table>
+      </div>
+      <p style="color:#4b0082;font-size:10px;font-family:monospace;margin:6px 0 0 2px;padding:0 16px 12px">
+        NOAA #9414290 · 37.4636°N, 122.4286°W
+      </p>
+    </div>
+    
 
     <div class="pixel-divider"></div>
 
-    <!-- ░░ HOW IT WORKS ░░ -->
+    <!-- HOW IT WORKS -->
     <div class="card">
       <div class="card-header">◈ HOW WE PICK A GREAT DAY</div>
       <div class="card-body">
-        <table class="conditions">
+        <table class="conditions-table">
           <tr>
             <td>🗓️ DAY OF WEEK</td>
-            <td>
-              Friday, Saturday, Sunday, or Monday only
-              <span>We skip the work week — weekends are for clamming.</span>
-            </td>
+            <td>Friday, Saturday, Sunday, or Monday only
+              <span>We skip the work week — weekends are for clamming.</span></td>
           </tr>
           <tr>
             <td>🌡️ WEATHER</td>
-            <td>
-              Daily high temperature ≥ 55°F
-              <span>Life's too short to dig clams in the cold.</span>
-            </td>
+            <td>Daily high temperature ≥ 55°F
+              <span>Life's too short to dig clams in the cold.</span></td>
           </tr>
           <tr>
             <td>🌊 TIDE</td>
-            <td>
-              At least one low tide below 0.0 ft MLLW between sunrise and sunset
-              <span>Negative daytime tides only — that's when the good stuff is exposed.</span>
-            </td>
+            <td>At least one low tide below 0.0 ft MLLW between sunrise and sunset
+              <span>Negative daytime tides only — that's when the good stuff is exposed.</span></td>
           </tr>
         </table>
       </div>
@@ -391,11 +255,11 @@
 
     <div class="pixel-divider"></div>
 
-    <!-- ░░ LOCATIONS ░░ -->
+    <!-- LOCATIONS -->
     <div class="card">
       <div class="card-header">◈ LOCATIONS WE TRACK</div>
       <div class="card-body">
-        <div class="locations">
+        <div class="locations-grid">
           <div class="loc-card">
             <div class="loc-icon">🗺️</div>
             <div class="loc-name">TOMALES BAY, CA</div>
@@ -412,29 +276,20 @@
 
     <div class="pixel-divider"></div>
 
-    <!-- ░░ SIGNUP ░░ -->
+    <!-- SIGNUP -->
     <div class="signup-card">
       <div class="signup-header">◈ GET THE WEEKLY FORECAST</div>
       <div class="signup-body">
-        <p>
-          Sign up for free and get an email every Wednesday morning
-          when <strong>great clamming days</strong> are spotted in the next 10 days.
-          Share it with your clamming crew — the more the merrier. 🦪
-        </p>
-        <a href="https://forms.gle/43oiAsQ9iUyzUP8U7" class="cta-btn">
-          ➕ JOIN THE MAILING LIST
-        </a>
+        <p>Sign up for free and get an email every Wednesday when great clamming days are spotted. Share it with your crew! 🦪</p>
+        <a href="https://forms.gle/43oiAsQ9iUyzUP8U7" class="cta-btn">➕ JOIN THE MAILING LIST</a>
       </div>
     </div>
 
-    <!-- ░░ FOOTER ░░ -->
     <footer>
-      ONLYCLAMS.ORG &nbsp;·&nbsp; POWERED BY NOAA &nbsp;·&nbsp; OPEN-METEO &nbsp;·&nbsp; SUNRISE-SUNSET.ORG
-      <br/><br/>
+      ONLYCLAMS.ORG &nbsp;·&nbsp; POWERED BY NOAA &nbsp;·&nbsp; OPEN-METEO &nbsp;·&nbsp; SUNRISE-SUNSET.ORG<br/><br/>
       MADE WITH 🦪 IN CALIFORNIA
     </footer>
 
   </div>
-
 </body>
 </html>
